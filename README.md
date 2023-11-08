@@ -60,12 +60,12 @@ This bash script is located here: [./bin/install_terraform_cli](./bin/install_te
 
 #### Shebang Considerations
 
-A Shebang (prounced Sha-bang) tells the bash script what program that will interpet the script. eg. `#!/bin/bash`
+A Shebang (prounced Sha-bang) tells the bash script what program that will interpret the script. eg. `#!/bin/bash`
 
 ChatGPT recommended this format for bash: `#!/usr/bin/env bash`
 
 - for portability for different OS distributions 
--  will search the user's PATH for the bash executable
+- will search the user's PATH for the bash executable
 
 https://en.wikipedia.org/wiki/Shebang_(Unix)
 
@@ -151,3 +151,28 @@ gp env HELLO='world'
 All future workspaces launched will set the env vars for all bash terminals opened in thoes workspaces.
 
 You can also set en vars in the `.gitpod.yml` but this can only contain non-senstive env vars.
+
+### AWS CLI Installation
+
+AWS CLI is installed for the project via the bash script [`./bin/install_aws_cli`](./bin/install_aws_cli)
+
+
+[Getting Started Install (AWS CLI)](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+[AWS CLI Env Vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html)
+
+We can check if our AWS credentials are configured correctly by running the following AWS CLI command:
+```sh
+aws sts get-caller-identity
+```
+
+If it is succesful you should see a json payload return that looks like this:
+
+```json
+{
+    "UserId": "AIEAVUO15ZPVHJ5WIJ5KR",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/terraform-beginner-bootcamp"
+}
+```
+
+We'll need to generate AWS CLI credentials from IAM User in order to use the AWS CLI.
