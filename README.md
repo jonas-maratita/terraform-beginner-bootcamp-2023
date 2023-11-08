@@ -7,7 +7,7 @@ This project is going utilize semantic versioning for its tagging.
 
 The general format:
 
- **MAJOR.MINOR.PATCH**, eg. `1.0.1`
+ **MAJOR.MINOR.PATCH**, e.g. `1.0.1`
 
 - **MAJOR** version when you make incompatible API changes
 - **MINOR** version when you add functionality in a backward compatible manner
@@ -60,7 +60,7 @@ This bash script is located here: [./bin/install_terraform_cli](./bin/install_te
 
 #### Shebang Considerations
 
-A Shebang (prounced Sha-bang) tells the bash script what program that will interpret the script. eg. `#!/bin/bash`
+A Shebang (prounced Sha-bang) tells the bash script what program that will intepret the script. e.g. `#!/bin/bash`
 
 ChatGPT recommended this format for bash: `#!/usr/bin/env bash`
 
@@ -73,11 +73,11 @@ https://en.wikipedia.org/wiki/Shebang_(Unix)
 
 When executing the bash script we can use the `./` shorthand notiation to execute the bash script.
 
-eg. `./bin/install_terraform_cli`
+e.g. `./bin/install_terraform_cli`
 
-If we are using a script in .gitpod.yml  we need to point the script to a program to interpert it.
+If we are using a script in .gitpod.yml  we need to point the script to a program to interpret it.
 
-eg. `source ./bin/install_terraform_cli`
+e.g. `source ./bin/install_terraform_cli`
 
 #### Linux Permissions Considerations
 
@@ -107,7 +107,7 @@ https://www.gitpod.io/docs/configure/workspaces/tasks
 
 We can list out all Enviroment Variables (Env Vars) using the `env` command
 
-We can filter specific env vars using grep eg. `env | grep AWS_`
+We can filter specific env vars using grep e.g. `env | grep AWS_`
 
 #### Setting and Unsetting Env Vars
 
@@ -120,7 +120,7 @@ We can set an env var temporarily when just running a command
 ```sh
 HELLO='world' ./bin/print_message
 ```
-Within a bash script we can set env without writing export eg.
+Within a bash script we can set env without writing export e.g.
 
 ```sh
 #!/usr/bin/env bash
@@ -132,13 +132,13 @@ echo $HELLO
 
 #### Printing Vars
 
-We can print an env var using echo eg. `echo $HELLO`
+We can print an env var using echo e.g. `echo $HELLO`
 
 #### Scoping of Env Vars
 
 When you open up new bash terminals in VSCode it will not be aware of env vars that you have set in another window.
 
-If you want to Env Vars to persist across all future bash terminals that are open you need to set env vars in your bash profile. eg. `.bash_profile`
+If you want to Env Vars to persist across all future bash terminals that are open you need to set env vars in your bash profile. e.g. `.bash_profile`
 
 #### Persisting Env Vars in Gitpod
 
@@ -203,41 +203,94 @@ At the start of a new terraform project we will run `terraform init` to download
 
 This will generate out a changeset, about the state of our infrastructure and what will be changed.
 
-We can output this changeset ie. "plan" to be passed to an apply, but often you can just ignore outputting.
+We can output this changeset i.e.. "plan" to be passed to an apply, but often you can just ignore outputting.
 
 #### Terraform Apply
 
 `terraform apply`
 
-This will run a plan and pass the changeset to be execute by terraform. Apply should prompt yes or no.
+This will run a plan and pass the changeset to be executed by terraform. Apply should prompt yes or no.
 
-If we want to automatically approve an apply we can provide the auto approve flag eg. `terraform apply --auto-approve`
+If we want to automatically approve an apply, we can provide the auto approve flag e.g. `terraform apply --auto-approve`
 
 #### Terraform Destroy
 
 `terraform destroy`
 This will destroy resources.
 
-You can also use the auto approve flag to skip the approve prompt eg. `terraform destroy --auto-approve`
+You can also use the auto approve flag to skip the approve prompt e.g., `terraform destroy --auto-approve`
 
 #### Terraform Lock Files
 
-`.terraform.lock.hcl` contains the locked versioning for the providers or modulues that should be used with this project.
+`.terraform.lock.hcl` contains the locked versioning for the providers or modules that should be used with this project.
 
-The Terraform Lock File **should be committed** to your Version Control System (VSC) eg. Github
+The Terraform Lock File **should be committed** to your Version Control System (VSC) e.g. Github
 
 #### Terraform State Files
 
 `.terraform.tfstate` contain information about the current state of your infrastructure.
 
-This file **should not be commited** to your VCS.
+This file **should not be committed** to your VCS.
 
-This file can contain sensentive data.
+This file can contain sensitive data.
 
-If you lose this file, you lose knowning the state of your infrastructure.
+If you lose this file, you lose knowing the state of your infrastructure.
 
 `.terraform.tfstate.backup` is the previous state file state.
 
 #### Terraform Directory
 
 `.terraform` directory contains binaries of terraform providers.
+
+## Issues with Terraform Cloud Login and Gitpod Workspace
+
+When attempting to run `terraform login` it will launch bash a WISWIG view to generate a token. However, it does not work expected in Gitpod VsCode in the browser.
+
+The workaround to manually generate a token in Terraform Cloud
+
+```
+https://app.terraform.io/app/settings/tokens?source=terraform-login
+```
+
+Then create and open the file manually here:
+
+```sh
+touch /home/gitpod/.terraform.d/credentials.tfrc.json
+open /home/gitpod/.terraform.d/credentials.tfrc.json
+```
+
+Provide the following code (replace your token in the file):
+
+```json
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "YOUR-TERRAFORM-CLOUD-TOKEN"
+    }
+  }
+}
+```
+
+#### Terraform Cloud 
+
+The following error was encoutered during the Terraform Cloud migration.
+
+```
+│ Error: No valid credential sources found
+│ 
+│   with provider["registry.terraform.io/hashicorp/aws"],
+│   on main.tf line 19, in provider "aws":
+│   19: provider "aws" {
+│ 
+│ Please see https://registry.terraform.io/providers/hashicorp/aws
+│ for more information about providing credentials.
+│ 
+│ Error: failed to refresh cached credentials, no EC2 IMDS role found,
+│ operation error ec2imds: GetMetadata, request canceled, context deadline
+│ exceeded
+│ 
+```
+
+This was resolved by setting variables for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_DEFAULT_REGION in the Terraform Cloud settings for variable sets.
+
+- [Create Cloud Variable Set](https://developer.hashicorp.com/terraform/tutorials/cloud-get-started/cloud-create-variable-set)
