@@ -23,8 +23,8 @@ The Terraform CLI installation instructions have changed due to gpg keyring chan
 
 ### Considerations for Linux Distribution
 
-This project is built against Ubunutu.
-Please consider checking your Linux Distrubtion and change accordingly to distrubtion needs. 
+This project is built against Ubuntu.
+Please consider checking your Linux Distribution and change accordingly to distribution needs. 
 
 [How To Check OS Version in Linux](
 https://www.cyberciti.biz/faq/how-to-check-os-version-in-linux-command-line/)
@@ -56,11 +56,11 @@ This bash script is located here: [./bin/install_terraform_cli](./bin/install_te
 
 - This will keep the Gitpod Task File ([.gitpod.yml](.gitpod.yml)) tidy.
 - This allow us an easier to debug and execute manually Terraform CLI install
-- This will allow better portablity for other projects that need to install Terraform CLI.
+- This will allow better portability for other projects that need to install Terraform CLI.
 
 #### Shebang Considerations
 
-A Shebang (prounced Sha-bang) tells the bash script what program that will intepret the script. e.g. `#!/bin/bash`
+A Shebang (pronounced Sha-bang) tells the bash script what program that will interpret the script. i.e. `#!/bin/bash`
 
 ChatGPT recommended this format for bash: `#!/usr/bin/env bash`
 
@@ -71,7 +71,7 @@ https://en.wikipedia.org/wiki/Shebang_(Unix)
 
 #### Execution Considerations
 
-When executing the bash script we can use the `./` shorthand notiation to execute the bash script.
+When executing the bash script we can use the `./` shorthand notation to execute the bash script.
 
 e.g. `./bin/install_terraform_cli`
 
@@ -81,7 +81,7 @@ e.g. `source ./bin/install_terraform_cli`
 
 #### Linux Permissions Considerations
 
-In order to make our bash scripts executable we need to change linux permission for the fix to be exetuable at the user mode.
+In order to make our bash scripts executable we need to change Linux permission for the fix to be executable at the user mode.
 
 ```sh
 chmod u+x ./bin/install_terraform_cli
@@ -105,7 +105,7 @@ https://www.gitpod.io/docs/configure/workspaces/tasks
 
 #### env command
 
-We can list out all Enviroment Variables (Env Vars) using the `env` command
+We can list all Environment Variables (Env Vars) using the `env` command.
 
 We can filter specific env vars using grep e.g. `env | grep AWS_`
 
@@ -113,7 +113,7 @@ We can filter specific env vars using grep e.g. `env | grep AWS_`
 
 In the terminal we can set using `export HELLO='world`
 
-In the terrminal we unset using `unset HELLO`
+In the terminal we unset using `unset HELLO`
 
 We can set an env var temporarily when just running a command
 
@@ -138,19 +138,19 @@ We can print an env var using echo e.g. `echo $HELLO`
 
 When you open up new bash terminals in VSCode it will not be aware of env vars that you have set in another window.
 
-If you want to Env Vars to persist across all future bash terminals that are open you need to set env vars in your bash profile. e.g. `.bash_profile`
+If you want to Env Vars to persist across all future bash terminals that are open, you need to set env vars in your bash profile. e.g. `.bash profile`
 
 #### Persisting Env Vars in Gitpod
 
-We can persist env vars into gitpod by storing them in Gitpod Secrets Storage.
+We can persist env vars into Gitpod by storing them in Gitpod Secrets Storage.
 
 ```
 gp env HELLO='world'
 ```
 
-All future workspaces launched will set the env vars for all bash terminals opened in thoes workspaces.
+All future workspaces launched will set the env vars for all bash terminals opened in those workspaces.
 
-You can also set en vars in the `.gitpod.yml` but this can only contain non-senstive env vars.
+You can also set en vars in the `.gitpod.yml` but this can only contain non-sensitive env vars.
 
 ### AWS CLI Installation
 
@@ -165,7 +165,7 @@ We can check if our AWS credentials is configured correctly by running the follo
 aws sts get-caller-identity
 ```
 
-If it is succesful you should see a json payload return that looks like this:
+If it is successful you should see a json payload return that looks like this:
 
 ```json
 {
@@ -190,7 +190,7 @@ Terraform sources their providers and modules from the Terraform registry which 
 
 ### Terraform Console
 
-We can see a list of all the Terrform commands by simply typing `terraform`
+We can see a list of all the Terraform commands by simply typing `terraform`
 
 
 #### Terraform Init
@@ -201,9 +201,9 @@ At the start of a new terraform project we will run `terraform init` to download
 
 `terraform plan`
 
-This will generate out a changeset, about the state of our infrastructure and what will be changed.
+This will generate a changeset about the state of our infrastructure and what will be changed.
 
-We can output this changeset i.e.. "plan" to be passed to an apply, but often you can just ignore outputting.
+We can output this changeset i.e., "plan" to be passed to an apply, but often you can just ignore outputting.
 
 #### Terraform Apply
 
@@ -218,7 +218,7 @@ If we want to automatically approve an apply, we can provide the auto approve fl
 `terraform destroy`
 This will destroy resources.
 
-You can also use the auto approve flag to skip the approve prompt e.g., `terraform destroy --auto-approve`
+You can also use the auto approve flag to skip the approve prompt e.g. `terraform apply --auto-approve`
 
 #### Terraform Lock Files
 
@@ -228,7 +228,7 @@ The Terraform Lock File **should be committed** to your Version Control System (
 
 #### Terraform State Files
 
-`.terraform.tfstate` contain information about the current state of your infrastructure.
+`.terraform.tfstate` contains information about the current state of your infrastructure.
 
 This file **should not be committed** to your VCS.
 
@@ -244,7 +244,7 @@ If you lose this file, you lose knowing the state of your infrastructure.
 
 ## Issues with Terraform Cloud Login and Gitpod Workspace
 
-When attempting to run `terraform login` it will launch bash a WISWIG view to generate a token. However, it does not work expected in Gitpod VsCode in the browser.
+When attempting to run `terraform login` it will launch bash a wiswig view to generate a token. However, it does not work expected in Gitpod VsCode in the browser.
 
 The workaround to manually generate a token in Terraform Cloud
 
@@ -270,6 +270,8 @@ Provide the following code (replace your token in the file):
   }
 }
 ```
+
+We have automated this workaround with the following bash script [bin/generate_tfrc_credentials](bin/generate_tfrc_credentials)
 
 #### Terraform Cloud 
 
