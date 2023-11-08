@@ -175,7 +175,7 @@ If it is succesful you should see a json payload return that looks like this:
 }
 ```
 
-We'll need to generate AWS CLI credits from IAM User in order to the user AWS CLI.
+We'll need to generate AWS CLI credentials from IAM User in order to use the AWS CLI.
 
 ## Terraform Basics
 
@@ -215,10 +215,10 @@ If we want to automatically approve an apply we can provide the auto approve fla
 
 #### Terraform Destroy
 
-`teraform destroy`
+`terraform destroy`
 This will destroy resources.
 
-You can alos use the auto approve flag to skip the approve prompt eg. `terraform apply --auto-approve`
+You can also use the auto approve flag to skip the approve prompt eg. `terraform destroy --auto-approve`
 
 #### Terraform Lock Files
 
