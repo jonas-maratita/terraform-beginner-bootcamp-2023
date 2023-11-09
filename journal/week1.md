@@ -1,5 +1,27 @@
 # Terraform Beginner Bootcamp 2023 - Week 1
 
+## Fixing Tags
+
+[How to Delete Local and Remote tags on Git](https://devconnected.com/how-to-delete-local-and-remote-tags-on-git/)
+
+Locally delete a tag
+```sh
+git tag -d <tag_name>
+```
+
+Remotely delete tag
+```sh
+git push --delete origin tagname
+```
+
+Checkout the commit that you want to retag. Grab the SHA from your Github history
+```
+git checkout <SHA>
+git tag M.M.P
+git push --tags
+git checkout main
+```
+
 ## Root Module Structure
 
 Our Root Module Structure is as follows:
@@ -110,3 +132,40 @@ module "terrahouse_aws" {
 }
 ```
 [Modules Sources](https://developer.hashicorp.com/terraform/language/modules/sources)
+
+## Considerations when using ChatGPT to write Terraform
+
+LLMs such as ChatGPT may not be trained on the latest documentation or information about Terraform.
+
+It may likely produce older examples that could be deprecated. Often affecting providers
+
+## Working wwith files in Terraform
+
+### Fileexists function
+
+[Fileexists Function](https://developer.hashicorp.com/terraform/language/functions/fileexists)
+
+This is a built-in Terraform function to check if a file exists
+
+```tf
+condition = fileexists(var.index_html_filepath)
+```
+
+### Filemd5
+
+[Filemd5 Function](https://developer.hashicorp.com/terraform/language/functions/filemd5)
+
+### Path Variables
+
+In Terraform there is a special variable called `path` that allows us to reference local paths:
+-path.module = get the path for the current module
+-path.root = get the path for the root module
+[Special Path Variable](https://developer.hashicorp.com/terraform/language/expressions/references#filesystem-and-workspace-info)
+
+```
+resource "aws_s3_object" "index_html" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key    = "index.html"
+  source = "${path.root}public/index.html"
+}
+```
