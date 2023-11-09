@@ -1,4 +1,20 @@
 # Terraform Beginner Bootcamp 2023 - Week 1
+* [Fixing Tags](#fixing-tags)
+* [Root Module Structure](#root-module-structure)
+* [Terraform and Input Variables](#terraform-and-input-variables)
+  + [Terraform Cloud Variables](#terraform-cloud-variables)
+  + [Loading Terraform Input Variables](#loading-terraform-input-variables)
+    - [var flag](#var-flag)
+    - [var-file flag](#var-file-flag)
+    - [terraform.tfvars](#terraformtfvars)
+    - [auto.tfvars](#autotfvars)
+  + [Order of Precedence for Loading Terraform Variables](#order-of-terraform-variables)
+* [Dealing with Configuration Drift](#dealing-with-configuration-drift)
+  - [What happens if we lose our state (terraform.tfstate) file](#what-happens-if-we-lose-our-state-file)
+  - [Fix Missing Resources with Terraform Import](#fix-missing-resources-with-terraform-import)
+  - [Fix Manual Configuration](#fix-manual-configuration)
+  - [Fix using Terraform Refresh](#fix-using-terraform-refresh)
+* [Terraform Modules](#terraform-modules)
 
 ## Fixing Tags
 
@@ -44,7 +60,7 @@ PROJECT_ROOT
 
 In Terraform we can set two kinds of variables:
 - Environment Variables - set in bash terminal. e.g., AWS Credentials
-- Terraform Variables - normally set in tfvars file
+- Terraform Variables - normally set in .tfvars file
 
 Terraform Cloud variables can be set to sensitive so they are not shown in the UI
 
@@ -57,20 +73,29 @@ The `-var` flag can be used to set an input variable or override a varriable in 
 
 ### var-file flag
 
-- To Do: document this flag
+The -var-file flag is used to pass Input Variable values into Terraform plan and apply commands using a file that contains the values. This allows you to save the Input Variable values in a file with a .tfvars extension that can be checked into source control for you variable environments you need to deploy to / manage. In short, -var-file flag enables multiple input variable values to be passed in by referencing a file that contains the values. 
+
+```tf
+terraform apply -var-file="testing.tfvars"
+```
 
 ### terraform.tfvars
 
-This is the default file to load terraform files in bulk
+This is the default file to load terraform files in bulk. Terrafrorm automatically loads files named **EXACTLY** terrafrom.tfvars or terraform.tfvars.json
 
 
 ### auto.tfvars
-
-- To Do: document this functionality for terraform cloud
+Terraform automatically loads any files **ENDING** in .auto.tfvars or auto.tfvars.json
 
 ### Order of Terraform variables
 
--  To Do: document which terraform variables takes precedence
+Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
+
+Environment variables:
++ The terraform.tfvars file, if present.
++ The terraform.tfvars.json file, if present.
++ Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
++ Any -var and -var-file options on the command line, in the order they are provided. (This includes variables set by a Terraform Cloud workspace.)
 
 ## Dealing with Configuration Drift
 
@@ -208,4 +233,31 @@ jsonencode({"hello"="world"})
 
 [jsonencode](https://developer.hashicorp.com/terraform/language/functions/jsonencode)
 
+### Changing the lifecyle of resources
 
+[Meta-Arguments Lifecyle](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle)
+
+## Terraform Data
+
+[terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data)
+
+Plain data values such as Local Values and Input Variables don't have any side-effects to plan against and so they aren't valid in replace_triggered_by. You can use terraform_data's behavior of planning an action each time input changes to indirectly use a plain value to trigger replacement.
+
+```tf
+variable "revision" {
+  default = 1
+}
+
+resource "terraform_data" "replacement" {
+  input = var.revision
+}
+
+# This resource has no convenient attribute which forces replacement,
+# but can now be replaced by any change to the revision variable value.
+resource "example_database" "test" {
+  lifecycle {
+    replace_triggered_by = [terraform_data.replacement]
+  }
+}
+
+```
