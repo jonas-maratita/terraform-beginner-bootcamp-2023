@@ -307,3 +307,12 @@ resource "aws_instance" "web" {
   }
 }
 ```
+
+### [For Each expressions] (https://developer.hashicorp.com/terraform/language/expressions/for)
+
+For each allows us to enumerate over complex data types
+
+```[for s in var.list : upper(s)]
+```
+
+This is mostly usefule when you are creating multiples of a cloud resource and you want to reduce the amount of repetitve terraform code.
