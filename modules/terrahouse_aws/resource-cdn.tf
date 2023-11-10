@@ -9,7 +9,7 @@ resource "aws_cloudfront_origin_access_control" "default" {
 }
 
 locals {
-    s3_origin_id = "MYS3Origin"
+    s3_origin_id = "MyS3Origin"
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution
@@ -22,7 +22,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "Static websitehosing for: ${var.bucket_name}"
+  comment             = "Static website hosting for: ${var.bucket_name}"
   default_root_object = "index.html"
 
   # aliases = ["mysite.example.com", "yoursite.example.com"]
