@@ -237,9 +237,7 @@ jsonencode({"hello"="world"})
 
 [Meta-Arguments Lifecyle](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle)
 
-## Terraform Data
-
-[terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data)
+## [Terraform Data](https://developer.hashicorp.com/terraform/language/resources/terraform-data)
 
 Plain data values such as Local Values and Input Variables don't have any side-effects to plan against and so they aren't valid in replace_triggered_by. You can use terraform_data's behavior of planning an action each time input changes to indirectly use a plain value to trigger replacement.
 
@@ -260,4 +258,52 @@ resource "example_database" "test" {
   }
 }
 
+```
+
+## [Provisioners](https://developer.hashicorp.com/terraform/language/syntax)
+
+Provisioners allow you to execute commands on compute instances e.g. an AWS CLI command
+
+They are not recommended for use by Hashicopr because configuration management tools such as Ansible are a better fit but the functionality exists
+
+[Provisioners]
+
+### [Local-exec](https://developer.hashicorp.com/terraform/language/resources/provisioners/local-exec)
+
+This will execute a command i.e., `terraform apply` on the machine running the Terraform commands
+```tf
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} >> private_ips.txt"
+  }
+}
+```
+
+
+### [Remote-exec](https://developer.hashicorp.com/terraform/language/resources/provisioners/remote-exec)
+
+This will execute a command on the machine which you targe. You will need to provide credentials such as ssh to get into the machine.
+
+```tf
+resource "aws_instance" "web" {
+  # ...
+
+  # Establishes connection to be used by all
+  # generic remote provisioners (i.e. file/remote-exec)
+  connection {
+    type     = "ssh"
+    user     = "root"
+    password = var.root_password
+    host     = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "puppet apply",
+      "consul join ${aws_instance.web.private_ip}",
+    ]
+  }
+}
 ```
