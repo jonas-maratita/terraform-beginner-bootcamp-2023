@@ -284,6 +284,7 @@ func resourceHouseUpdate(ctx context.Context, d *schema.ResourceData, m interfac
   d.Set("name",payload["name"])
   d.Set("description",payload["description"])
   d.Set("content_version",payload["content_version"])
+
   return diags
 }
 
@@ -323,5 +324,6 @@ func resourceHouseDelete(ctx context.Context, d *schema.ResourceData, m interfac
     d.SetId("")
 
     log.Print("resourceHouseDelete:end")
+
   return diags
 }
