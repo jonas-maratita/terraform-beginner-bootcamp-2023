@@ -47,3 +47,12 @@ We can run the web server by executing the following command
 bundle install
 bundle exec ruby server.rb
 ```
+
+All of the code for our server is stored in the `server.rb` file.
+
+## [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+
+Terraform Provider resources utilize CRUD
+
+CRUD stands for create, read, update, delete
+
