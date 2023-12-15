@@ -308,7 +308,7 @@ resource "aws_instance" "web" {
 }
 ```
 
-### [For Each expressions] (https://developer.hashicorp.com/terraform/language/expressions/for)
+### [For Each expressions](https://developer.hashicorp.com/terraform/language/expressions/for)
 
 For each allows us to enumerate over complex data types
 
